@@ -81,6 +81,27 @@ const check_profile_fields = ( body , success, error ) => {
 
    if( !body['account_type'] )
       return error('Account type is required')
+
+   
+   
+   
+   return success( true )
+}
+
+
+const check_get_profile_fields = ( body , success, error ) => {
+
+   if ( !body )
+       return error('Please fill all the fields')
+   
+   if( !body['email'] )
+      return error('Email is required')
+   
+   if ( !emailFormat.test( body['email'] ))
+      return error('Please enter a valid email address')
+
+   if( !body['account_type'] )
+      return error('Account type is required')
    
    
    return success( true )
@@ -89,5 +110,6 @@ const check_profile_fields = ( body , success, error ) => {
 module.exports = {
     check_signup_fields,
     check_signin_fields,
-    check_profile_fields
+    check_profile_fields,
+    check_get_profile_fields
 }

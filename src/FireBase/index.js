@@ -79,3 +79,25 @@ exports.firebase_update_ipfsHash = (collectionName, data, success, error) => {
     });
 
 };
+
+
+// GetProfile from firebase
+
+exports.firebase_getProfile = (collectionName, data, success, error) => {
+
+
+    database.collection(collectionName).doc(data['email']).get().then(d => {
+
+        if (d.exists) {
+        // console.log(d.data().data)
+        return success(d.data().data)
+        }
+
+        else {
+            return error('No such user found')
+           
+        }
+
+    });
+
+};

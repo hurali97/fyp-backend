@@ -1,9 +1,9 @@
 const express = require('express');
 const app = express();
 const { addFile, getUserdata } = require('./src/IPFS')
-const { check_signup_fields, check_signin_fields, check_profile_fields } = require('./src/FieldsAuthentication')
-const { firebase_signup, firebase_signin, firebase_update_ipfsHash } = require('./src/FireBase')
-const { EncryptPassword, DecryptPassword } =  require('./src/Encryption')
+const { check_signup_fields, check_signin_fields, check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
+const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_getProfile } = require('./src/FireBase')
+const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
 
 const dotenv = require('dotenv');
 dotenv.config();
@@ -22,7 +22,7 @@ app.get('/', (req, res) => {
 app.post('/signup', async (req, res) => {
     const data = req.body
 
-    check_signup_fields( data.content, async success => {
+    check_signup_fields(data.content, async success => {
 
         if (success) {
             const fileHash = await addFile(data)
@@ -33,12 +33,12 @@ app.post('/signup', async (req, res) => {
                 ipfs_hash: fileHash
             }
 
-            firebase_signup( data.content['account_type'], info, succ => {
+            firebase_signup(data.content['account_type'], info, succ => {
                 res.json({ message: 'Registered successfully' })
             }, err => {
-                res.json({ message: err})
+                res.json({ message: err })
             })
-            
+
         }
 
     }, error => {
@@ -51,33 +51,31 @@ app.post('/signup', async (req, res) => {
 
 // ************* Signin route ************* 
 
-
 app.post('/signin', async (req, res) => {
     const data = req.body
 
-    check_signin_fields( data, async success => {
+    check_signin_fields(data, async success => {
 
         if (success) {
-      
-            firebase_signin( data['account_type'], data,async succ => {
-            
-                let userMatched =  await DecryptPassword( data.password, succ.password ) 
-                if( userMatched )
-                {
+
+            firebase_signin(data['account_type'], data, async succ => {
+
+                let userMatched = await DecryptPassword(data.password, succ.password)
+                if (userMatched) {
                     getUserdata(succ.ipfs_hash, userdata => {
-                        res.json({ message: 'Logged in successfully',  userdata })
+                        res.json({ message: 'Logged in successfully', userdata })
                     }, failed => {
-                        res.json({ message: failed})
+                        res.json({ message: failed })
                     })
-                  
+
                 }
-                else{
+                else {
                     res.json({ message: 'Password do not match' })
                 }
             }, err => {
-                res.json({ message: err})
+                res.json({ message: err })
             })
-            
+
         }
 
     }, error => {
@@ -89,12 +87,12 @@ app.post('/signin', async (req, res) => {
 
 
 // ************* Edit Profile route ************* 
-
+// Email and account type can never change
 
 app.post('/editProfile', async (req, res) => {
     const data = req.body
 
-    check_profile_fields( data.content, async success => {
+    check_profile_fields(data.content, async success => {
 
         if (success) {
             const fileHash = await addFile(data)
@@ -104,12 +102,12 @@ app.post('/editProfile', async (req, res) => {
                 ipfs_hash: fileHash
             }
 
-            firebase_update_ipfsHash( data.content['account_type'], info, succ => {
+            firebase_update_ipfsHash(data.content['account_type'], info, succ => {
                 res.json({ message: 'Profile updated successfully' })
             }, err => {
-                res.json({ message: err})
+                res.json({ message: err })
             })
-            
+
         }
 
     }, error => {
@@ -117,6 +115,40 @@ app.post('/editProfile', async (req, res) => {
     })
 
 })
+
+
+
+// ************* Get Profile route ************* 
+
+app.get('/Profile', async (req, res) => {
+    const data = req.body
+
+    check_get_profile_fields(data, async success => {
+
+        if (success) {
+            firebase_getProfile(data['account_type'], data, async succ => {
+
+                    getUserdata(succ.ipfs_hash, userdata => {
+                        res.json({ userdata })
+                    }, failed => {
+                        res.json({ message: failed })
+                    })
+
+            
+            }, err => {
+                res.json({ message: err })
+            })
+
+        }
+
+    }, error => {
+        res.json({ message: error })
+    })
+
+})
+
+
+
 
 
 app.listen(process.env.PORT, () => console.log(`App listening on port ${process.env.PORT}!`))
