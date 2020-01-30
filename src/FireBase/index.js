@@ -101,3 +101,40 @@ exports.firebase_getProfile = (collectionName, data, success, error) => {
     });
 
 };
+
+
+// Create jobs firebase
+
+exports.firebase_create_job = (collectionName, data, success, error) => {
+
+
+    database.collection(collectionName).doc(data['email']).get().then(d => {
+
+        if (d.exists) {
+            // database.collection(collectionName).doc(data['email']).set({
+            //     data
+            // })
+            //     .then(resp => {
+            //         return success(true)
+            //     })
+            //     .catch(err => { return error(err.message) })
+        }
+
+        else {
+
+            let _email = data['email'];
+
+            database.collection(collectionName).doc(data['email']).set({
+                [_email+'_1']: data
+            },
+                { merge: true })
+                .then(resp => {
+                    return success(true)
+                })
+                .catch(err => { return error(err.message) })
+           
+        }
+
+    });
+
+};

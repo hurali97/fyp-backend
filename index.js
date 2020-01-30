@@ -1,8 +1,13 @@
 const express = require('express');
 const app = express();
 const { addFile, getUserdata } = require('./src/IPFS')
-const { check_signup_fields, check_signin_fields, check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
-const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_getProfile } = require('./src/FireBase')
+
+const { check_signup_fields, check_signin_fields, check_createJob_fields,
+        check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
+
+const { firebase_signup, firebase_signin, firebase_update_ipfsHash,
+         firebase_getProfile, firebase_create_job } = require('./src/FireBase')
+
 const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
 
 const dotenv = require('dotenv');
@@ -147,6 +152,30 @@ app.get('/Profile', async (req, res) => {
 
 })
 
+
+// ************* Create Job route ************* 
+
+
+app.post('/createJob', async (req, res) => {
+    const data = req.body
+
+    check_createJob_fields(data, async success => {
+
+        if (success) {
+         
+            firebase_create_job('EmployerJobs', data, succ => {
+                res.json({ message: 'Job created successfully' })
+            }, err => {
+                res.json({ message: err })
+            })
+
+        }
+
+    }, error => {
+        res.json({ message: error })
+    })
+
+})
 
 
 
