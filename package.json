@@ -7,9 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node index.js"
   },
-  "engines": {
-    "node": "8.16.0"
-  },
+ 
   "author": "hur ali",
   "license": "MIT",
   "dependencies": {
