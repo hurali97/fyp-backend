@@ -181,7 +181,6 @@ app.post('/createJob', async (req, res) => {
 
 // ************* GetAll Job route ************* 
 
-
 app.get('/allJobs', async (req, res) => {
 
     firebase_getAll_jobs('AllJobs', succ => {
@@ -189,8 +188,6 @@ app.get('/allJobs', async (req, res) => {
     }, err => {
         res.json({ message: err })
     })
-
-
 
 })
 
