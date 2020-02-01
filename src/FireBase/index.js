@@ -111,16 +111,30 @@ exports.firebase_create_job = (collectionName, data, success, error) => {
     database.collection(collectionName).doc(data['email']).get().then(d => {
 
         if (d.exists) {
-            // database.collection(collectionName).doc(data['email']).set({
-            //     data
-            // })
-            //     .then(resp => {
-            //         return success(true)
-            //     })
-            //     .catch(err => { return error(err.message) })
+        //    console.log(Object.keys(d.data()))
+
+           let _jobs = Object.keys(d.data())
+
+           let _email = data['email'];
+
+           database.collection(collectionName).doc(data['email']).set({
+               [`${_email}_${_jobs.length+1}`]: data
+           },
+               { merge: true })
+               .then(resp => {
+                database.collection('Alljobs').doc(data['category']).get().then(job => {
+                    let alljobs = Object.keys(job.data())
+                    database.collection('Alljobs').doc(data['category']).set({
+                        [`${_email}_${alljobs.length+1}`]: data
+                    }, { merge: true });
+                })
+                   return success(true)
+               })
+               .catch(err => { return error(err.message) })
         }
 
         else {
+ 
 
             let _email = data['email'];
 
@@ -129,6 +143,10 @@ exports.firebase_create_job = (collectionName, data, success, error) => {
             },
                 { merge: true })
                 .then(resp => {
+                    database.collection('Alljobs').doc(data['category']).set({
+                        [_email+'_1']: data
+                    });
+                    
                     return success(true)
                 })
                 .catch(err => { return error(err.message) })
@@ -138,3 +156,21 @@ exports.firebase_create_job = (collectionName, data, success, error) => {
     });
 
 };
+
+
+// Create jobs firebase
+
+exports.firebase_getAll_jobs = async(collectionName, success, error) => {
+
+  getDocuments()
+ 
+};
+
+
+
+const  getDocuments = async () => {
+    const snapshot = await database.collection('AllJobs').get()
+    return snapshot.docs.map(doc =>{
+        return console.log(doc.data())
+    });
+}

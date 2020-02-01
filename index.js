@@ -3,10 +3,10 @@ const app = express();
 const { addFile, getUserdata } = require('./src/IPFS')
 
 const { check_signup_fields, check_signin_fields, check_createJob_fields,
-        check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
+    check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
 
-const { firebase_signup, firebase_signin, firebase_update_ipfsHash,
-         firebase_getProfile, firebase_create_job } = require('./src/FireBase')
+const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_getAll_jobs,
+    firebase_getProfile, firebase_create_job } = require('./src/FireBase')
 
 const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
 
@@ -133,13 +133,13 @@ app.get('/Profile', async (req, res) => {
         if (success) {
             firebase_getProfile(data['account_type'], data, async succ => {
 
-                    getUserdata(succ.ipfs_hash, userdata => {
-                        res.json({ userdata })
-                    }, failed => {
-                        res.json({ message: failed })
-                    })
+                getUserdata(succ.ipfs_hash, userdata => {
+                    res.json({ userdata })
+                }, failed => {
+                    res.json({ message: failed })
+                })
 
-            
+
             }, err => {
                 res.json({ message: err })
             })
@@ -162,7 +162,7 @@ app.post('/createJob', async (req, res) => {
     check_createJob_fields(data, async success => {
 
         if (success) {
-         
+
             firebase_create_job('EmployerJobs', data, succ => {
                 res.json({ message: 'Job created successfully' })
             }, err => {
@@ -174,6 +174,23 @@ app.post('/createJob', async (req, res) => {
     }, error => {
         res.json({ message: error })
     })
+
+})
+
+
+
+// ************* GetAll Job route ************* 
+
+
+app.get('/allJobs', async (req, res) => {
+
+    firebase_getAll_jobs('AllJobs', succ => {
+        res.json({ message: 'Job created successfully' })
+    }, err => {
+        res.json({ message: err })
+    })
+
+
 
 })
 
