@@ -183,8 +183,8 @@ app.post('/createJob', async (req, res) => {
 
 app.get('/allJobs', async (req, res) => {
 
-    firebase_getAll_jobs('AllJobs', succ => {
-        res.json({ message: 'Job created successfully' })
+    firebase_getAll_jobs( succ => {
+        res.json({ alljobs: succ })
     }, err => {
         res.json({ message: err })
     })
