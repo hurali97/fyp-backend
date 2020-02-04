@@ -180,7 +180,7 @@ exports.firebase_create_job = (collectionName, data, success, error) => {
 };
 
 
-// Create jobs firebase
+// Get all jobs firebase
 
 exports.firebase_getAll_jobs = async ( success, error) => {
 
@@ -196,6 +196,44 @@ exports.firebase_getAll_jobs = async ( success, error) => {
 
 
 
+// Get all jobs firebase
+
+exports.firebase_get_job = async ( category, success, error) => {
+    
+    let jobsArray = []
+
+    database.collection('Alljobs').doc(category).get().then(job => {
+      
+      let keys = Object.keys(job.data())
+      let values = Object.values(job.data())
+
+
+      values.map((val, ind) => {
+
+         
+          if( val.status == 'newly arrived')
+          {
+              let _job = {
+                  ...val,
+                  job_id: keys[ind]
+              }
+
+              jobsArray.push(_job)
+          }
+
+      })
+
+    //   console.log(jobsArray)
+      return success(jobsArray)
+
+    })
+        .catch(err => {
+            return error('No jobs for this category')
+        })
+
+};
+
+
 const getDocuments = async ( ) => {
 
     let jobsArray = []
@@ -208,13 +246,17 @@ const getDocuments = async ( ) => {
 
 
             values.map((val, ind) => {
-                let _job = {
-                    [keys[ind]]: val
+ 
+                if( val.status == 'newly arrived')
+                {
+                    let _job = {
+                        ...val,
+                        job_id: keys[ind]
+                    }
+    
+                    jobsArray.push(_job)
                 }
-
-                jobsArray.push(_job)
-
-
+ 
             })
 
 

@@ -137,10 +137,24 @@ const check_createJob_fields = (body, success, error) => {
    return success(true)
 }
 
+
+const check_get_job_fields = (body, success, error) => {
+
+   if (!body)
+      return error('Please fill all the fields')
+
+   if (!body['category'])
+      return error('Category is required')
+ 
+
+   return success(true)
+}
+
 module.exports = {
    check_signup_fields,
    check_signin_fields,
    check_profile_fields,
    check_get_profile_fields,
-   check_createJob_fields
+   check_createJob_fields,
+   check_get_job_fields
 }

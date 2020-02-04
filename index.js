@@ -2,10 +2,10 @@ const express = require('express');
 const app = express();
 const { addFile, getUserdata } = require('./src/IPFS')
 
-const { check_signup_fields, check_signin_fields, check_createJob_fields,
+const { check_signup_fields, check_signin_fields, check_createJob_fields,check_get_job_fields,
     check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
 
-const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_getAll_jobs,
+const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_getAll_jobs,firebase_get_job,
     firebase_getProfile, firebase_create_job } = require('./src/FireBase')
 
 const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
@@ -179,7 +179,7 @@ app.post('/createJob', async (req, res) => {
 
 
 
-// ************* GetAll Job route ************* 
+// ************* Get All Job route ************* 
 
 app.get('/allJobs', async (req, res) => {
 
@@ -187,6 +187,31 @@ app.get('/allJobs', async (req, res) => {
         res.json({ alljobs: succ })
     }, err => {
         res.json({ message: err })
+    })
+})
+
+
+
+// ************* Get Category wise Job route ************* 
+
+app.get('/job', async (req, res) => {
+
+    const data = req.body
+
+    check_get_job_fields(data, async success => {
+
+        if (success) {
+            firebase_get_job(data['category'],async succ => {
+               
+                res.json({ jobs: succ })
+            }, err => {
+                res.json({ message: err })
+            })
+
+        }
+
+    }, error => {
+        res.json({ message: error })
     })
 
 })
