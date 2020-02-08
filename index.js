@@ -1,5 +1,8 @@
 const express = require('express');
 const app = express();
+
+const cors = require('cors')
+
 const { addFile, getUserdata } = require('./src/IPFS')
 
 const { check_signup_fields, check_signin_fields, check_createJob_fields,check_get_job_fields,
@@ -12,6 +15,10 @@ const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
 
 const dotenv = require('dotenv');
 dotenv.config();
+
+// cors
+
+app.use(cors())
 
 //  Json middleware
 app.use(express.json())
@@ -39,9 +46,9 @@ app.post('/signup', async (req, res) => {
             }
 
             firebase_signup(data.content['account_type'], info, succ => {
-                res.json({ message: 'Registered successfully' })
+                res.json({ message: 'Registered successfully', status: 'success' })
             }, err => {
-                res.json({ message: err })
+                res.json({ message: err , status: 'error' })
             })
 
         }
@@ -68,9 +75,9 @@ app.post('/signin', async (req, res) => {
                 let userMatched = await DecryptPassword(data.password, succ.password)
                 if (userMatched) {
                     getUserdata(succ.ipfs_hash, userdata => {
-                        res.json({ message: 'Logged in successfully', userdata })
+                        res.json({ message: 'Logged in successfully', userdata, status: 'success' })
                     }, failed => {
-                        res.json({ message: failed })
+                        res.json({ message: failed, status: 'error' })
                     })
 
                 }
