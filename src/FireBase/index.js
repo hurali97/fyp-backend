@@ -66,6 +66,7 @@ exports.firebase_update_ipfsHash = (collectionName, data, success, error) => {
 
             }, { merge: true })
                 .then(resp => {
+                    
                     return success(true)
                 })
                 .catch(err => { return error(err.message) })

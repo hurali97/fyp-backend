@@ -54,7 +54,7 @@ app.post('/signup', async (req, res) => {
         }
 
     }, error => {
-        res.json({ message: error })
+        res.json({ message: error, status: 'error'  })
     })
 
 
@@ -82,16 +82,16 @@ app.post('/signin', async (req, res) => {
 
                 }
                 else {
-                    res.json({ message: 'Password do not match' })
+                    res.json({ message: 'Password do not match', status: 'error'  })
                 }
             }, err => {
-                res.json({ message: err })
+                res.json({ message: err , status: 'error' })
             })
 
         }
 
     }, error => {
-        res.json({ message: error })
+        res.json({ message: error, status: 'error'  })
     })
 
 
@@ -115,15 +115,15 @@ app.post('/editProfile', async (req, res) => {
             }
 
             firebase_update_ipfsHash(data.content['account_type'], info, succ => {
-                res.json({ message: 'Profile updated successfully' })
+                res.json({ message: 'Profile updated successfully', status: 'success'  })
             }, err => {
-                res.json({ message: err })
+                res.json({ message: err, status: 'error'  })
             })
 
         }
 
     }, error => {
-        res.json({ message: error })
+        res.json({ message: error , status: 'error' })
     })
 
 })
@@ -132,7 +132,7 @@ app.post('/editProfile', async (req, res) => {
 
 // ************* Get Profile route ************* 
 
-app.get('/Profile', async (req, res) => {
+app.post('/Profile', async (req, res) => {
     const data = req.body
 
     check_get_profile_fields(data, async success => {
