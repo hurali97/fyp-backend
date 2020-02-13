@@ -171,15 +171,15 @@ app.post('/createJob', async (req, res) => {
         if (success) {
 
             firebase_create_job('EmployerJobs', data, succ => {
-                res.json({ message: 'Job created successfully' })
+                res.json({ message: 'Job created successfully', status: 'success' })
             }, err => {
-                res.json({ message: err })
+                res.json({ message: err, status: 'error' })
             })
 
         }
 
     }, error => {
-        res.json({ message: error })
+        res.json({ message: error, status: 'error' })
     })
 
 })
