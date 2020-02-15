@@ -9,7 +9,7 @@ const { check_signup_fields, check_signin_fields, check_createJob_fields,check_g
     check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
 
 const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_getAll_jobs,firebase_get_job,
-    firebase_getProfile, firebase_create_job, firebase_apply_job } = require('./src/FireBase')
+    firebase_getProfile, firebase_create_job, firebase_apply_job,firebase_get_applied_job } = require('./src/FireBase')
 
 const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
 
@@ -246,6 +246,19 @@ app.post('/apply', async ( req, res ) => {
     })
 })
 
+
+app.get('/appliedJobs', async (req, res) => {
+
+    const data = req.body
+ 
+            firebase_get_applied_job(data['freelancer_email'],async succ => {
+                res.json({ message: succ, status: 'success' })
+            }, err => {
+                console.log(err)
+                res.json({ message: err, status: 'error' })
+            })
+  
+})
 
 
 app.listen(process.env.PORT || 5000, () => console.log(`App listening on port ${process.env.PORT}!`))

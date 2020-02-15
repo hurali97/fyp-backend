@@ -379,3 +379,25 @@ exports.firebase_apply_job = async (  data, success, error) => {
         })
 
 };
+
+
+exports.firebase_get_applied_job = async (  data, success, error) => {
+    
+    let jobsArray = [] 
+
+    database.collection('AppliedJobs').doc(data.freelancer_email).get().then(job => {
+      
+      let keys = Object.keys(job.data())
+      let values = Object.values(job.data())
+
+console.log(values)
+      values.map((val, ind) => {
+ 
+      })
+ 
+    })
+        .catch(err => {
+            return error('This job has been removed')
+        })
+
+};
