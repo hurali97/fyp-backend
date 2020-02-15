@@ -145,7 +145,35 @@ const check_get_job_fields = (body, success, error) => {
 
    if (!body['category'])
       return error('Category is required')
- 
+
+
+   return success(true)
+}
+
+
+const check_applyJob_fields = (body, success, error) => {
+
+   if (!body)
+      return error('Please fill all the fields')
+
+   if (!body['freelancer_email'])
+      return error('Freelancer email is required')
+
+   if (!emailFormat.test(body['freelancer_email']))
+      return error('Please enter a valid email address')
+
+   if (!body['employer_email'])
+      return error('Employer email is required')
+
+   if (!emailFormat.test(body['employer_email']))
+      return error('Please enter a valid email address')
+
+   if (!body['category'])
+      return error('Category is required')
+
+   if (!body['job_id'])
+      return error('Job Id is required')
+
 
    return success(true)
 }
@@ -156,5 +184,6 @@ module.exports = {
    check_profile_fields,
    check_get_profile_fields,
    check_createJob_fields,
-   check_get_job_fields
+   check_get_job_fields,
+   check_applyJob_fields
 }

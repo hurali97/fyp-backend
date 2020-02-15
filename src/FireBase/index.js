@@ -272,3 +272,110 @@ const getDocuments = async ( ) => {
 
     return alljobs
 }
+
+
+
+exports.firebase_apply_job = async (  data, success, error) => {
+    
+    let jobsArray = [] 
+
+    database.collection('Alljobs').doc(data.category).get().then(job => {
+      
+      let keys = Object.keys(job.data())
+      let values = Object.values(job.data())
+
+
+      values.map((val, ind) => {
+
+         
+          if( keys[ind] == data.job_id )
+          { 
+             let _jobData = {
+                 budget: val.budget,
+                 caegory: val.category,
+                 description: val.description,
+                 duration: val.duration,
+                 email: val.email,
+                 job_id: data.job_id,
+                 status: 'pending' 
+             }
+
+             database.collection('AppliedJobs').doc(data['freelancer_email']).get().then(d => {
+
+                if (d.exists) { 
+        
+                    let _jobs = Object.keys(d.data()) 
+                    let _check = false
+                    for( let i = 0; i< _jobs.length; i++){
+                        if( _jobs[i] == data.job_id ) {
+                            _check = true
+                            break
+                        } 
+                    } 
+
+                    if( _check ){
+                       return  error('You have already applied for this job')
+
+                    }
+                    else{
+                        database.collection('AppliedJobs').doc(data['freelancer_email']).set({
+                            [data['job_id']]: _jobData
+                        }, { merge: true });
+            
+                        let _employerNotfiData = {
+                           ..._jobData,
+                           message: `${data['freelancer_email']} wants to apply for this job.`
+                        }
+             
+                        database.collection('EmployerNotifs').doc(data['employer_email']).get().then(d => {
+            
+                            if (d.exists) { 
+                    
+                                let _jobs = Object.keys(d.data()) 
+                               
+                                let _dataKey = `Notif_${parseInt(_jobs[_jobs.length-1].split('_')[1])+1}`
+             
+                    
+                                database.collection('EmployerNotifs').doc(data['employer_email']).set({
+                                    [_dataKey]: _employerNotfiData
+                                },
+                                    { merge: true })
+                                    .then(resp=>{
+                                        return success("Successfully applied for job, waiting for approval")
+                                    })
+                    
+                            }
+                    
+                            else {
+                     
+                                database.collection('EmployerNotifs').doc(data['employer_email']).set({
+                                    [`Notif_${1}`]: _employerNotfiData
+                                },
+                                    { merge: true })
+                                    .then(resp=>{
+                                        return success("Successfully applied for job, waiting for approval")
+                                    })
+                    
+                            }
+                    
+                        });
+                    }
+                } 
+        
+            }) 
+
+
+           
+             
+
+            
+          }
+
+      })
+ 
+    })
+        .catch(err => {
+            return error('This job has been removed')
+        })
+
+};

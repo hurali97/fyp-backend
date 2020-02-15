@@ -5,11 +5,11 @@ const cors = require('cors')
 
 const { addFile, getUserdata } = require('./src/IPFS')
 
-const { check_signup_fields, check_signin_fields, check_createJob_fields,check_get_job_fields,
+const { check_signup_fields, check_signin_fields, check_createJob_fields,check_get_job_fields,check_applyJob_fields,
     check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
 
 const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_getAll_jobs,firebase_get_job,
-    firebase_getProfile, firebase_create_job } = require('./src/FireBase')
+    firebase_getProfile, firebase_create_job, firebase_apply_job } = require('./src/FireBase')
 
 const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
 
@@ -223,6 +223,28 @@ app.get('/job', async (req, res) => {
 
 })
 
+
+app.post('/apply', async ( req, res ) => {
+
+    const data = req.body
+
+    check_applyJob_fields(data, async success => {
+
+        if (success) {
+
+            firebase_apply_job(data, succ => {
+                res.json({ message: succ, status: 'success' })
+            }, err => {
+                console.log(err)
+                res.json({ message: err, status: 'error' })
+            })
+
+        }
+
+    }, error => {
+        res.json({ message: error, status: 'error' })
+    })
+})
 
 
 
