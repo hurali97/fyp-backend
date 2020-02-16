@@ -248,7 +248,7 @@ app.post('/apply', async ( req, res ) => {
 })
 
 
-app.get('/appliedJobs', async (req, res) => {
+app.post('/appliedJobs', async (req, res) => {
 
     const data = req.body
  
@@ -261,7 +261,7 @@ app.get('/appliedJobs', async (req, res) => {
   
 })
 
-app.get('/notifications', async (req, res) => {
+app.post('/notifications', async (req, res) => {
 
     const data = req.body
  
