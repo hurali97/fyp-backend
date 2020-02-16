@@ -9,7 +9,9 @@ const { check_signup_fields, check_signin_fields, check_createJob_fields,check_g
     check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
 
 const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_getAll_jobs,firebase_get_job,
-    firebase_getProfile, firebase_create_job, firebase_apply_job,firebase_get_applied_job } = require('./src/FireBase')
+    firebase_getProfile, firebase_create_job, firebase_apply_job,firebase_get_applied_job,firebase_declineJob
+    ,firebase_get_notifications, firebase_acceptJob,firebase_startJob,firebase_completeJob
+    ,firebase_markCompleteJob } = require('./src/FireBase')
 
 const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
 
@@ -234,8 +236,7 @@ app.post('/apply', async ( req, res ) => {
 
             firebase_apply_job(data, succ => {
                 res.json({ message: succ, status: 'success' })
-            }, err => {
-                console.log(err)
+            }, err => { 
                 res.json({ message: err, status: 'error' })
             })
 
@@ -254,11 +255,84 @@ app.get('/appliedJobs', async (req, res) => {
             firebase_get_applied_job(data['freelancer_email'],async succ => {
                 res.json({ message: succ, status: 'success' })
             }, err => {
-                console.log(err)
+                 
                 res.json({ message: err, status: 'error' })
             })
   
 })
 
+app.get('/notifications', async (req, res) => {
+
+    const data = req.body
+ 
+            firebase_get_notifications(data['employer_email'],async succ => {
+                res.json({ message: succ, status: 'success' })
+            }, err => {
+                 
+                res.json({ message: err, status: 'error' })
+            })
+  
+})
+
+
+app.post('/declineJob', async (req, res) => {
+
+    const data = req.body
+ 
+            firebase_declineJob(data,async succ => {
+                res.json({  status: 'success' })
+            }, err => {
+                 
+                res.json({ message: err, status: 'error' })
+            }) 
+})
+
+app.post('/acceptJob', async (req, res) => {
+
+    const data = req.body
+ 
+            firebase_acceptJob(data,async succ => {
+                res.json({  status: 'success' })
+            }, err => {
+                 
+                res.json({ message: err, status: 'error' })
+            }) 
+})
+
+app.post('/startJob', async (req, res) => {
+
+    const data = req.body
+ 
+            firebase_startJob(data,async succ => {
+                res.json({  status: 'success' })
+            }, err => {
+                 
+                res.json({ message: err, status: 'error' })
+            }) 
+})
+
+app.post('/completeJob', async (req, res) => {
+
+    const data = req.body
+ 
+            firebase_completeJob(data,async succ => {
+                res.json({  status: 'success' })
+            }, err => {
+                 
+                res.json({ message: err, status: 'error' })
+            }) 
+})
+
+app.post('/markCompleteJob', async (req, res) => {
+
+    const data = req.body
+ 
+            firebase_markCompleteJob(data,async succ => {
+                res.json({  status: 'success' })
+            }, err => {
+                 
+                res.json({ message: err, status: 'error' })
+            }) 
+})
 
 app.listen(process.env.PORT || 5000, () => console.log(`App listening on port ${process.env.PORT}!`))
