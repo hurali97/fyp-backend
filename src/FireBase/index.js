@@ -358,6 +358,12 @@ exports.firebase_apply_job = async (data, success, error) => {
 
                                 else {
 
+                                    _employerNotfiData = {
+                                        ..._employerNotfiData,
+                                        notif_id: 'Notif_1'
+                                    }
+
+
                                     database.collection('EmployerNotifs').doc(data['employer_email']).set({
                                         [`Notif_${1}`]: _employerNotfiData
                                     },
@@ -385,7 +391,7 @@ exports.firebase_apply_job = async (data, success, error) => {
                         database.collection('EmployerNotifs').doc(data['employer_email']).get().then(d => {
 
                             if (d.exists) {
-                                console.log(d.data())
+                                // console.log(d.data())
 
                                 let _jobs = Object.keys(d.data())
 
@@ -464,12 +470,19 @@ exports.firebase_get_applied_job = async (data, success, error) => {
 exports.firebase_get_notifications = async (data, success, error) => {
 
     database.collection('EmployerNotifs').doc(data).get().then(job => {
+        // console.log(data,job.data())
+        if( job.data() ){
+            let values = Object.values(job.data())
 
-        let values = Object.values(job.data())
+            return success(values)
+        }
+        else{
+            return error('No notifications')
+        }
 
-        return success(values)
     })
         .catch(err => {
+            console.log(err)
             return error('Some error occurred')
         })
 

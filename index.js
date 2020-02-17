@@ -264,7 +264,6 @@ app.post('/appliedJobs', async (req, res) => {
 app.post('/notifications', async (req, res) => {
 
     const data = req.body
- 
             firebase_get_notifications(data['employer_email'],async succ => {
                 res.json({ message: succ, status: 'success' })
             }, err => {
