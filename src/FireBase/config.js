@@ -4,13 +4,13 @@ require('@firebase/firestore');
 
 
 const config = {
-  apiKey: process.env.apiKey,
-  authDomain: process.env.authDomain,
-  databaseURL: process.env.databaseURL,
+  apiKey: "AIzaSyCfS4xHkf99GCwWL5yPkvvPzo6g0erQ8gw",
+  authDomain: "dworkbackend.firebaseapp.com",
+  databaseURL: "https://dworkbackend.firebaseio.com",
   projectId: "dworkbackend",
-  storageBucket: process.env.storageBucket,
-  messagingSenderId: process.env.messagingSenderId,
-  appId: process.env.appId
+  storageBucket: "dworkbackend.appspot.com",
+  messagingSenderId: "390252526049",
+  appId: "1:390252526049:web:6172a60a694a54d24f7aa0"
 }
 
 firebase.initializeApp(config);

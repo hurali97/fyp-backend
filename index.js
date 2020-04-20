@@ -15,8 +15,8 @@ const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_get
 
 const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
 
-const dotenv = require('dotenv');
-dotenv.config();
+// const dotenv = require('dotenv');
+// dotenv.config();
 
 // cors
 
@@ -334,4 +334,4 @@ app.post('/markCompleteJob', async (req, res) => {
             }) 
 })
 
-app.listen(process.env.PORT || 5000, () => console.log(`App listening on port ${process.env.PORT}!`))
+app.listen(5000, () => console.log(`App listening on port 5000!`))
