@@ -15,12 +15,12 @@
   "license": "MIT",
   "dependencies": {
     "@firebase/app": "^0.6.2",
-    "brcypt": "^1.0.1",
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "firebase": "^7.14.1",
     "fs": "0.0.1-security",
     "ipfs-api": "^26.1.2",
-    "node-fetch": "^2.6.0"
+    "node-fetch": "^2.6.0",
+    "bcrypt": "^4.0.1"
   }
 }
