@@ -1,10 +1,8 @@
 const { database, firebase } = require('./config')
 
+ 
 
-
-// signup info saved to firebase 
-
-exports.firebase_signup = (collectionName, data, success, error) => {
+exports._signup = (collectionName, data, success, error) => {
 
 
     database.collection(collectionName).doc(data['email']).get().then(d => {
@@ -28,10 +26,9 @@ exports.firebase_signup = (collectionName, data, success, error) => {
 
 };
 
+ 
 
-// signin from firebase
-
-exports.firebase_signin = (collectionName, data, success, error) => {
+exports._signin = (collectionName, data, success, error) => {
 
 
     database.collection(collectionName).doc(data['email']).get().then(d => {
@@ -50,10 +47,9 @@ exports.firebase_signin = (collectionName, data, success, error) => {
 
 };
 
+ 
 
-// update ipfs hash on firebase
-
-exports.firebase_update_ipfsHash = (collectionName, data, success, error) => {
+exports._update_ipfsHash = (collectionName, data, success, error) => {
 
 
     database.collection(collectionName).doc(data['email']).get().then(d => {
@@ -81,16 +77,14 @@ exports.firebase_update_ipfsHash = (collectionName, data, success, error) => {
 
 };
 
+ 
 
-// GetProfile from firebase
-
-exports.firebase_getProfile = (collectionName, data, success, error) => {
+exports._getProfile = (collectionName, data, success, error) => {
 
 
     database.collection(collectionName).doc(data['email']).get().then(d => {
 
-        if (d.exists) {
-            // console.log(d.data().data)
+        if (d.exists) { 
             return success(d.data().data)
         }
 
@@ -103,16 +97,14 @@ exports.firebase_getProfile = (collectionName, data, success, error) => {
 
 };
 
+ 
 
-// Create jobs firebase
-
-exports.firebase_create_job = (collectionName, data, success, error) => {
+exports._create_job = (collectionName, data, success, error) => {
 
 
     database.collection(collectionName).doc(data['email']).get().then(d => {
 
-        if (d.exists) {
-            //    console.log(Object.keys(d.data()))
+        if (d.exists) { 
 
             let _jobs = Object.keys(d.data())
 
@@ -180,10 +172,9 @@ exports.firebase_create_job = (collectionName, data, success, error) => {
 
 };
 
+ 
 
-// Get all jobs firebase
-
-exports.firebase_getAll_jobs = async (success, error) => {
+exports._getAll_jobs = async (success, error) => {
 
     let alljobs = await getDocuments()
 
@@ -195,11 +186,9 @@ exports.firebase_getAll_jobs = async (success, error) => {
 
 };
 
+ 
 
-
-// Get all jobs firebase
-
-exports.firebase_get_job = async (category, success, error) => {
+exports._get_job = async (category, success, error) => {
 
     let jobsArray = []
 
@@ -223,7 +212,7 @@ exports.firebase_get_job = async (category, success, error) => {
 
         })
 
-        //   console.log(jobsArray)
+       
         return success(jobsArray)
 
     })
@@ -273,7 +262,7 @@ const getDocuments = async () => {
 
 
 
-exports.firebase_apply_job = async (data, success, error) => {
+exports._apply_job = async (data, success, error) => {
 
     let jobsArray = []
 
@@ -452,7 +441,7 @@ exports.firebase_apply_job = async (data, success, error) => {
 };
 
 
-exports.firebase_get_applied_job = async (data, success, error) => {
+exports._get_applied_job = async (data, success, error) => {
 
     database.collection('AppliedJobs').doc(data).get().then(job => {
 
@@ -467,7 +456,7 @@ exports.firebase_get_applied_job = async (data, success, error) => {
 };
 
 
-exports.firebase_get_notifications = async (data, success, error) => {
+exports._get_notifications = async (data, success, error) => {
 
     database.collection('EmployerNotifs').doc(data).get().then(job => {
         // console.log(data,job.data())
@@ -489,7 +478,7 @@ exports.firebase_get_notifications = async (data, success, error) => {
 };
 
 
-exports.firebase_declineJob = async (data, success, error) => {
+exports._declineJob = async (data, success, error) => {
 
     database.collection('EmployerNotifs').doc(data.employer_email).get().then(job => {
 
@@ -549,7 +538,7 @@ exports.firebase_declineJob = async (data, success, error) => {
 
  
 
- exports.firebase_acceptJob = async (data, success, error) => {
+ exports._acceptJob = async (data, success, error) => {
 
     database.collection('EmployerNotifs').doc(data.employer_email).get().then(job => {
 
@@ -683,7 +672,7 @@ exports.firebase_declineJob = async (data, success, error) => {
 };
 
 
-exports.firebase_startJob = async (data, success, error) => {
+exports._startJob = async (data, success, error) => {
 
     database.collection('EmployerNotifs').doc(data.email).get().then(job => {
 
@@ -752,7 +741,7 @@ exports.firebase_startJob = async (data, success, error) => {
 };
 
 
-exports.firebase_completeJob = async (data, success, error) => {
+exports._completeJob = async (data, success, error) => {
 
     database.collection('EmployerNotifs').doc(data.email).get().then(job => {
 
@@ -821,7 +810,7 @@ exports.firebase_completeJob = async (data, success, error) => {
 };
 
 
-exports.firebase_markCompleteJob = async (data, success, error) => {
+exports._markCompleteJob = async (data, success, error) => {
 
     database.collection('EmployerNotifs').doc(data.email).get().then(job => {
 

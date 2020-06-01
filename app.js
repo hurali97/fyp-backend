@@ -8,18 +8,14 @@ const { addFile, getUserdata } = require('./src/IPFS')
 const { check_signup_fields, check_signin_fields, check_createJob_fields,check_get_job_fields,check_applyJob_fields,
     check_profile_fields, check_get_profile_fields } = require('./src/FieldsAuthentication')
 
-const { firebase_signup, firebase_signin, firebase_update_ipfsHash, firebase_getAll_jobs,firebase_get_job,
-    firebase_getProfile, firebase_create_job, firebase_apply_job,firebase_get_applied_job,firebase_declineJob
-    ,firebase_get_notifications, firebase_acceptJob,firebase_startJob,firebase_completeJob
-    ,firebase_markCompleteJob } = require('./src/FireBase')
+const { _signup, _signin, _update_ipfsHash, _getAll_jobs,_get_job,
+    _getProfile, _create_job, _apply_job,_get_applied_job,_declineJob
+    ,_get_notifications, _acceptJob,_startJob,_completeJob
+    ,_markCompleteJob } = require('./src/Helper')
 
 const { EncryptPassword, DecryptPassword } = require('./src/Encryption')
 
-// const dotenv = require('dotenv');
-// dotenv.config();
-
-// cors
-
+ 
 app.use(cors())
 
 //  Json middleware
@@ -47,7 +43,7 @@ app.post('/signup', async (req, res) => {
                 ipfs_hash: fileHash
             }
 
-            firebase_signup(data.content['account_type'], info, succ => {
+            _signup(data.content['account_type'], info, succ => {
                 res.json({ message: 'Registered successfully', status: 'success' })
             }, err => {
                 res.json({ message: err , status: 'error' })
@@ -72,7 +68,7 @@ app.post('/signin', async (req, res) => {
 
         if (success) {
 
-            firebase_signin(data['account_type'], data, async succ => {
+            _signin(data['account_type'], data, async succ => {
 
                 let userMatched = await DecryptPassword(data.password, succ.password)
                 if (userMatched) {
@@ -116,7 +112,7 @@ app.post('/editProfile', async (req, res) => {
                 ipfs_hash: fileHash
             }
 
-            firebase_update_ipfsHash(data.content['account_type'], info, succ => {
+            _update_ipfsHash(data.content['account_type'], info, succ => {
                 res.json({ message: 'Profile updated successfully', status: 'success'  })
             }, err => {
                 res.json({ message: err, status: 'error'  })
@@ -140,7 +136,7 @@ app.post('/Profile', async (req, res) => {
     check_get_profile_fields(data, async success => {
 
         if (success) {
-            firebase_getProfile(data['account_type'], data, async succ => {
+            _getProfile(data['account_type'], data, async succ => {
 
                 getUserdata(succ.ipfs_hash, userdata => {
                     res.json({ userdata })
@@ -172,7 +168,7 @@ app.post('/createJob', async (req, res) => {
 
         if (success) {
 
-            firebase_create_job('EmployerJobs', data, succ => {
+            _create_job('EmployerJobs', data, succ => {
                 res.json({ message: 'Job created successfully', status: 'success' })
             }, err => {
                 res.json({ message: err, status: 'error' })
@@ -192,7 +188,7 @@ app.post('/createJob', async (req, res) => {
 
 app.get('/allJobs', async (req, res) => {
 
-    firebase_getAll_jobs( succ => {
+    _getAll_jobs( succ => {
         res.json({ alljobs: succ })
     }, err => {
         res.json({ message: err })
@@ -210,7 +206,7 @@ app.get('/job', async (req, res) => {
     check_get_job_fields(data, async success => {
 
         if (success) {
-            firebase_get_job(data['category'],async succ => {
+            _get_job(data['category'],async succ => {
                
                 res.json({ jobs: succ })
             }, err => {
@@ -234,7 +230,7 @@ app.post('/apply', async ( req, res ) => {
 
         if (success) {
 
-            firebase_apply_job(data, succ => {
+            _apply_job(data, succ => {
                 res.json({ message: succ, status: 'success' })
             }, err => { 
                 res.json({ message: err, status: 'error' })
@@ -252,7 +248,7 @@ app.post('/appliedJobs', async (req, res) => {
 
     const data = req.body
  
-            firebase_get_applied_job(data['freelancer_email'],async succ => {
+            _get_applied_job(data['freelancer_email'],async succ => {
                 res.json({ message: succ, status: 'success' })
             }, err => {
                  
@@ -264,7 +260,7 @@ app.post('/appliedJobs', async (req, res) => {
 app.post('/notifications', async (req, res) => {
 
     const data = req.body
-            firebase_get_notifications(data['employer_email'],async succ => {
+            _get_notifications(data['employer_email'],async succ => {
                 res.json({ message: succ, status: 'success' })
             }, err => {
                  
@@ -278,7 +274,7 @@ app.post('/declineJob', async (req, res) => {
 
     const data = req.body
  
-            firebase_declineJob(data,async succ => {
+            _declineJob(data,async succ => {
                 res.json({  status: 'success' })
             }, err => {
                  
@@ -290,7 +286,7 @@ app.post('/acceptJob', async (req, res) => {
 
     const data = req.body
  
-            firebase_acceptJob(data,async succ => {
+            _acceptJob(data,async succ => {
                 res.json({  status: 'success' })
             }, err => {
                  
@@ -302,7 +298,7 @@ app.post('/startJob', async (req, res) => {
 
     const data = req.body
  
-            firebase_startJob(data,async succ => {
+            _startJob(data,async succ => {
                 res.json({  status: 'success' })
             }, err => {
                  
@@ -314,7 +310,7 @@ app.post('/completeJob', async (req, res) => {
 
     const data = req.body
  
-            firebase_completeJob(data,async succ => {
+            _completeJob(data,async succ => {
                 res.json({  status: 'success' })
             }, err => {
                  
@@ -326,7 +322,7 @@ app.post('/markCompleteJob', async (req, res) => {
 
     const data = req.body
  
-            firebase_markCompleteJob(data,async succ => {
+            _markCompleteJob(data,async succ => {
                 res.json({  status: 'success' })
             }, err => {
                  
